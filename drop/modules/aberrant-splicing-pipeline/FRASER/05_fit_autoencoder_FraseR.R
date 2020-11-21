@@ -13,7 +13,7 @@
 #'                "/aberrant_splicing/datasets/savedObjects/{dataset}/hyper.done" `'
 #'  output:
 #'   - fdsout: '`sm cfg.getProcessedDataDir() + 
-#'                  "/aberrant_splicing/datasets/savedObjects/{dataset}/predictedMeans_psiSite.h5"`'
+#'                  "/aberrant_splicing/datasets/savedObjects/{dataset}/predictedMeans_theta.h5"`'
 #'  type: script
 #'---
 
@@ -36,8 +36,8 @@ implementation <- snakemake@config$aberrantSplicing$implementation
 for(type in psiTypes){
     currentType(fds) <- type
     q <- bestQ(fds, type)
-    fds <- fit(fds, q=q, type=type, verbose=TRUE, iterations=15, 
-               implementation=implementation)
+    verbose(fds) <- 3   # Add verbosity to the FRASER object
+    fds <- fit(fds, q=q, type=type, iterations=15, implementation=implementation)
     fds <- saveFraserDataSet(fds)
 }
 

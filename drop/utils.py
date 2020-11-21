@@ -15,6 +15,7 @@ def checkFileExists(files):
     files = [files] if isinstance(files, str) else files
     return [f for f in files if Path(f).exists()]
 
+
 def createDir(directory):
     directory = Path(directory)
     if not directory.exists():
@@ -22,7 +23,7 @@ def createDir(directory):
         directory.mkdir(parents=True)
 
 
-def checkKeys(dict_, keys, check_files=False):
+def checkKeys(dict_, keys=None, check_files=False):
     """
     :param dict_: config dictionary
     :param keys: keys that are expected to be in dict_
@@ -62,17 +63,6 @@ def getWBuildPath(str_=True):
 def getWBuildSnakefile(str_=True):
     wb_path = getWBuildPath(str_=False)
     return returnPath(wb_path / "wBuild.snakefile", str_=str_)
-
-
-def getRuleFromPath(path, prefix=False):
-    path = str(path)
-    if not path.startswith("Scripts"):
-        raise ValueError(f"{path} is invalid for wBuild rule")
-    rule = path.replace("/", "_")
-    if prefix:
-        return rule.split(".")[0]
-    else:
-        return rule.replace(".", "_")
 
 
 def subsetBy(df, column, values):

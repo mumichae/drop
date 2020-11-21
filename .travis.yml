@@ -1,10 +1,6 @@
 language: python
 dist: xenial
 
-#cache:
-#  - directories:
-#    - $HOME/miniconda
-
 python:
   - "3.7"
 
@@ -19,12 +15,13 @@ install:
 
   # install dependencies
   - source $HOME/miniconda/etc/profile.d/conda.sh
-  - conda create -q -n drop -c conda-forge -c bioconda drop
+  - conda create -q -n drop -c conda-forge -c bioconda "python>=${TRAVIS_PYTHON_VERSION}" "r-base>=4.0.3" "drop>=1.0.1" "wbuild>=1.8" "bioconductor-fraser>=1.2.0"
+  - conda remove -n drop --force drop
   - conda activate drop
+  - pip install -r tests/requirements.txt
 
   # install drop
-  - pip uninstall wbuild -y
-  - pip install -e . -vv
+  - pip install . -vv
 
 script: 
   - conda list 
@@ -33,15 +30,7 @@ script:
   - samtools --version
   - bcftools --version
   - drop --version
+  - wbuild --version
   - python --version
-  
-  - mkdir drop_demo
-  - cd drop_demo
-  - drop demo
-  - snakemake -n
-  - snakemake aberrantExpression --jobs 2 --cores 2
-  - snakemake aberrantSplicing --jobs 2 --cores 2
-  - snakemake mae --jobs 2 --cores 2
-  - snakemake rnaVariantCalling --jobs 2 --cores 2
-  - snakemake --jobs 2 --cores 2
-  - snakemake exportCounts --cores 2
+
+  - travis_wait 50 pytest --durations=10 --durations-min=1.0
