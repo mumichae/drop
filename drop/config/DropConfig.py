@@ -11,7 +11,7 @@ class DropConfig:
         # wbuild keys
         "projectTitle", "htmlOutputPath", "scriptsPath", "indexWithFolderName", "fileRegex", "readmePath",
         # global parameters
-        "root", "sampleAnnotation", "geneAnnotation", "genomeAssembly", "exportCounts", "tools", "hpoFile",
+        "root", "sampleAnnotation", "geneAnnotation", "genomeAssembly", "genome", "exportCounts", "tools", "hpoFile",
         # modules
         "aberrantExpression", "aberrantSplicing", "mae", "rnaVariantCalling"
     ]
@@ -38,7 +38,7 @@ class DropConfig:
         # annotations
         self.geneAnnotation = self.get("geneAnnotation")
         self.genomeAssembly = self.get("genomeAssembly")
-        self.fastaFile = self.get("mae")["genome"] # TODO: move fasta outside of mae
+        self.fastaFile = self.get("genome")
         self.fastaDict = Path(self.fastaFile).with_suffix(".dict")
         self.sampleAnnotation = SampleAnnotation(self.get("sampleAnnotation"), self.root)
 
@@ -62,7 +62,7 @@ class DropConfig:
             processedResultsDir=self.processedResultsDir
         )
         self.RVC = RVC(
-	        config=self.get("rnaVariantCalling"),
+            config=self.get("rnaVariantCalling"),
             sampleAnnotation=self.sampleAnnotation,
             processedDataDir=self.processedDataDir,
             processedResultsDir=self.processedResultsDir
@@ -85,7 +85,6 @@ class DropConfig:
         utils.setKey(self.config_dict, None, "mae", self.MAE.dict_)
         utils.setKey(self.config_dict, None, "rnaVariantCalling", self.RVC.dict_)
 
-
     def setDefaults(self, config_dict):
         """
         Check mandatory keys and set defaults for any missing keys
@@ -93,8 +92,11 @@ class DropConfig:
         :return: config dictionary with defaults
         """
         # check mandatory keys
-        config_dict = utils.checkKeys(config_dict, keys=["htmlOutputPath", "root", "sampleAnnotation"],
-                                      check_files=True)
+        config_dict = utils.checkKeys(
+            config_dict,
+            keys=["htmlOutputPath", "root", "sampleAnnotation", "genome"],
+            check_files=True
+        )
         config_dict["geneAnnotation"] = utils.checkKeys(config_dict["geneAnnotation"], keys=None, check_files=True)
 
         config_dict["wBuildPath"] = utils.getWBuildPath()
@@ -116,18 +118,18 @@ class DropConfig:
         setKey(config_dict, ["tools"], "samtoolsCmd", "samtools")
         setKey(config_dict, ["tools"], "bcftoolsCmd", "bcftools")
         setKey(config_dict, ["tools"], "gatkCmd", "gatk")
-        
+
         return config_dict
-    
+
     def getRoot(self, str_=True):
         return utils.returnPath(self.root, str_=str_)
-    
+
     def getProcessedDataDir(self, str_=True):
         return utils.returnPath(self.processedDataDir, str_=str_)
-    
+
     def getProcessedResultsDir(self, str_=True):
         return utils.returnPath(self.processedResultsDir, str_=str_)
-    
+
     def getHtmlOutputPath(self, str_=True):
         return utils.returnPath(self.htmlOutputPath, str_=str_)
 

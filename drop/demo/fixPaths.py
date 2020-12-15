@@ -26,10 +26,11 @@ def fixConfig(input_file, output_file):
     with open(input_file, "r") as f:
         config = yaml.load(f, Loader=yaml.Loader)
     path_keys = {"root": None,
+                 "genome": None,
                  "htmlOutputPath": None,
                  "sampleAnnotation": None,
                  "v29": ["geneAnnotation"],
-                 "genome": ["mae"], "qcVcf": ["mae"]}
+                 "qcVcf": ["mae"]}
 
     for key, sub in path_keys.items():
         # iterate to key and entry

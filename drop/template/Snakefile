@@ -19,12 +19,14 @@ include: drop.utils.getWBuildSnakefile()
 include: cfg.AE.getWorkdir() + "/Snakefile"
 include: cfg.AS.getWorkdir() + "/Snakefile"
 include: cfg.MAE.getWorkdir() + "/Snakefile"
+include: cfg.RVC.getWorkdir() + "/Snakefile"
 
 rule all:
     input: 
         rules.aberrantExpression.output,
         rules.aberrantSplicing.output,
         rules.mae.output,
+        rules.rnaVariantCalling.output,
         rules.Index.output,
         dep_graph = cfg.get("htmlOutputPath") + "/dependency.done"
     shell:
@@ -46,7 +48,8 @@ rule dependencyGraph:
     input:
         rules.aberrantExpression_dependency.output,
         rules.aberrantSplicing_dependency.output,
-        rules.mae_dependency.output
+        rules.mae_dependency.output,
+        rules.rnaVariantCalling_dependency.output
     output: touch(cfg.get("htmlOutputPath") + "/dependency.done")
     priority: 1
 

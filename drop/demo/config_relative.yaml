@@ -7,6 +7,7 @@ sampleAnnotation: Data/sample_annotation.tsv
 geneAnnotation:
     v29: Data/gencode_annotation_trunc.gtf
 genomeAssembly: hg19
+genome: Data/chr21.fa
 hpoFile: null
 
 exportCounts:
@@ -47,7 +48,6 @@ aberrantSplicing:
 mae:
     groups:
       - mae
-    genome: Data/chr21.fa
     gatkIgnoreHeaderCheck: true
     padjCutoff: .05
     allelicRatioCutoff: 0.8

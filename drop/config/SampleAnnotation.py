@@ -38,8 +38,15 @@ class SampleAnnotation:
         clean columns and set types
         """
         data_types = {
-            "RNA_ID": str, "DNA_ID": str, "DROP_GROUP": str, "ANNOTATION": str,
-            "PAIRED_END": bool, "COUNT_MODE": str, "COUNT_OVERLAPS": bool, "STRAND": str
+            "RNA_ID": str,
+            "DNA_ID": str,
+            "DROP_GROUP": str,
+            "ANNOTATION": str,
+            "PAIRED_END": bool,
+            "COUNT_MODE": str,
+            "COUNT_OVERLAPS": bool,
+            "STRAND": str,
+            "RNA_VARIANT_GROUP": str
         }
         sa = pd.read_csv(self.file, sep=sep, index_col=False, converters=data_types)
         missing_cols = [x for x in self.SAMPLE_ANNOTATION_COLUMNS if x not in sa.columns.values]
