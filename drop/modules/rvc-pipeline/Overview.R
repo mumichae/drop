@@ -5,7 +5,7 @@
 #'  log:
 #'    - snakemake: '`sm str(tmp_dir / "RVC" / "overview.Rds")`'
 #'  params:
-#'    - groups: 'sm cfg.RVC.groups'
+#'    - groups: '`sm cfg.RVC.groups`'
 #' output:
 #'  html_document
 #'---

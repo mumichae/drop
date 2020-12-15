@@ -25,12 +25,19 @@ def fixConfig(input_file, output_file):
     """
     with open(input_file, "r") as f:
         config = yaml.load(f, Loader=yaml.Loader)
-    path_keys = {"root": None,
-                 "genome": None,
-                 "htmlOutputPath": None,
-                 "sampleAnnotation": None,
-                 "v29": ["geneAnnotation"],
-                 "qcVcf": ["mae"]}
+    path_keys = {
+        "root": None,
+        "genome": None,
+        "htmlOutputPath": None,
+        "sampleAnnotation": None,
+        "v29": ["geneAnnotation"],
+        "qcVcf": ["mae"],
+        "knownVCFs": ["rnaVariantCalling"],
+        "repeat_mask": ["rnaVariantCalling"]
+    }
+
+    def abs_path(p):
+        return str(Path(p).resolve())
 
     for key, sub in path_keys.items():
         # iterate to key and entry
@@ -39,7 +46,12 @@ def fixConfig(input_file, output_file):
             for x in sub:
                 dict_ = dict_[x]
         # set absolute path
-        dict_[key] = str(Path(dict_[key]).resolve())
+        path_entry = dict_[key]
+        if isinstance(path_entry, list):
+            for i, p in enumerate(path_entry):
+                dict_[key][i] = abs_path(p)
+        else:
+            dict_[key] = abs_path(path_entry)
 
     with open(output_file, "w") as f:
         yaml.safe_dump(config.copy(), f, default_flow_style=False, sort_keys=False)
